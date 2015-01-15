@@ -35,7 +35,7 @@ $(PepsVsNrBlastp):	$(LongIlocusPeps)
 			       > $@
 
 $(LongIlocusPeps):	$(LongIlocusPreds) aug-get-prot.py
-			./aug-get-prot.py < $^ > $@
+			./aug-get-prot.py < $< > $@
 
 $(LongIlocusPreds):	$(LongIlocusSeqs)
 			which augustus
@@ -43,7 +43,7 @@ $(LongIlocusPreds):	$(LongIlocusSeqs)
 			
 
 $(LongIlocusSeqs):	$(LongIlocusIds) $(AllIlocusSeqs)
-			./select-seq.pl $< > $@
+			./select-seq.pl $^ > $@
 
 $(AllIlocusSeqs):	
 			which iget

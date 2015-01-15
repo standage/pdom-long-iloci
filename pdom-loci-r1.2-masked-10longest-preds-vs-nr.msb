@@ -1,0 +1,12 @@
+BLASTp: All hits selected; All HSPs selected (pstyle: 4)
+        Selection Criteria: HLen > 80; CovS > 75; CovQ > 75; 
+
+QueryID                  SubjectID                 QLen  HSP     HLen  CovQ    Qx    Qy    Sx    Sy  SLen  CovS   Pid   Psi NGap    Score  Eval    Db    Annotation
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+s0007                    XP_004926219.1             340   1/1     274  80.6     1   274     1   288   343  86.6  23.9  45.8   32     81.3  3e-14   ref   PREDICTED: uncharacterized protein LOC101735321 [Bombyx mori]                                                           
+---------------------
+Database information:
+  Number of letters:  12,011,942,272, Number of sequences:   34,305,433
+BLAST information: gapped alignment BLASTp
+  Lambda=0.325, K=0.139, H=0.438; Gapped: Lambda=0.267, K=0.0410, H=0.140
+  Matrix: BLOSUM62; Gap Penalties: Existence: 11, Extension: 1
