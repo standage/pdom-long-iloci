@@ -3,13 +3,16 @@
 ## Motivation
 
 The *P. dominula* genome assembly includes 10 stretches >350kb in length with no annotated genes.
-These regions are laden with many repeats (although not necessarily at a higher density than the rest of the genome), and few transcript spliced alignments (most of which single-exon/ungapped).
+These regions are laden with many repeats (although not necessarily at a higher density than the rest of the genome), and few transcript spliced alignments (most of which are single-exon/ungapped).
+We want to be sure we have not made any obvious mistakes in our gene annotation workflow.
 
 ## Methods
 
-This workflow performs a simple check on these regions to investigate whether we may be missing *bona fide* genes in these regions.
+This procedure performs a simple check on these 10 regions to investigate whether we may be missing *bona fide* genes.
   * First, the workflow uses AUGUSTUS to predict genes and compare their translation products to a database of known proteins.
   * Second, the workflow analyzes Cufflinks transcript assemblies in these regions, calculates the length of each intron in the Cufflinks transcripts, and attempts to translate the Cufflinks transcripts.
+
+The procedure is implemented using GNU Make syntax, and can be executed by running ``make`` in the current directory.
 
 ## Results
 
