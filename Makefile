@@ -12,16 +12,43 @@ LongIlocusPreds=pdom-loci-r1.2-masked-10longest-preds.gff3
 LongIlocusPeps=pdom-loci-r1.2-masked-10longest-pred-peps.fa
 PepsVsNrBlastp=pdom-loci-r1.2-masked-10longest-preds-vs-nr.blastp
 PepsVsNrMsb=pdom-loci-r1.2-masked-10longest-preds-vs-nr.msb
+CufflinksTransAll=pdom-annot-r1.2-tuxedo.gff3
+CufflinksTransLong=pdom-annot-r1.2-tuxedo-10longest-iloci.gff3
+CuffIntronsLong=pdom-annot-r1.2-tuxedo-10longest-introns.txt
+CufflinksPeps=pdom-annot-r1.2-tuxedo-10longest-iloci-peps.fa
 
 
+#-------------------------------------------------------------------------------
+# Workflow definition
+#-------------------------------------------------------------------------------
 
-all:			$(PepsVsNrMsb) $(PepsVsNrBlast) $(LongIlocusPeps) \
+all:			$(CufflinksPeps) $(CuffIntronsLong) \
+			$(CufflinksTransLong) $(CufflinksTransAll) \
+			$(PepsVsNrMsb) $(PepsVsNrBlast) $(LongIlocusPeps) \
 			$(LongIlocusPreds) $(LongIlocusSeqs) $(AllIlocusSeqs)
 
 clean:			
-			rm -f $(PepsVsNrMsb) $(PepsVsNrBlast) \
+			rm -f $(CufflinksPeps) $(CuffIntronsLong) \
+			      $(CufflinksTransLong) $(CufflinksTransAll) \
+			      $(PepsVsNrMsb) $(PepsVsNrBlast) \
 			      $(LongIlocusPeps) $(LongIlocusPreds) \
 			      $(LongIlocusSeqs) $(AllIlocusSeqs)
+
+$(CufflinksPeps):	$(CufflinksTransLong) $(AllIlocusSeqs)
+			gt extractfeat -matchdescstart -join -retainids \
+			     -translate -seqfile $(AllIlocusSeqs) -type exon \
+			     $(CufflinksTransLong) > $@ || true
+
+$(CuffIntronsLong):	$(CufflinksTransLong) intron-lengths.py
+			./intron-lengths.py < $(CufflinksTransLong) \
+			    | sort -rn -k1,1 > $@
+
+$(CufflinksTransLong):	$(LongIlocusIds) $(CufflinksTransAll) selex.pl
+			./selex.pl $(LongIlocusIds) $(CufflinksTransAll) \
+			    | gt gff3 -retainids -sort -tidy -addintrons > $@
+
+$(CufflinksTransAll):	
+			iget -V $(PdomDataStore)/splicing/$@
 
 $(PepsVsNrMsb):		crtfile $(PepsVsNrBlastp)
 			which MuSeqBox
@@ -42,8 +69,8 @@ $(LongIlocusPreds):	$(LongIlocusSeqs)
 			augustus --species=arabidopsis --gff3=on $< > $@
 			
 
-$(LongIlocusSeqs):	$(LongIlocusIds) $(AllIlocusSeqs)
-			./select-seq.pl $^ > $@
+$(LongIlocusSeqs):	$(LongIlocusIds) $(AllIlocusSeqs) select-seq.pl
+			./select-seq.pl $(LongIlocusIds) $(AllIlocusSeqs) > $@
 
 $(AllIlocusSeqs):	
 			which iget
